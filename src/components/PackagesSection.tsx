@@ -91,19 +91,22 @@ const PackagesSection = () => (
                 </li>
               ))}
             </ul>
-            <motion.a
-              href="#packages"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={spring}
-              className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm transition-shadow ${
-                pkg.popular
-                  ? "bg-primary text-primary-foreground shadow-card hover:shadow-card-hover"
-                  : "bg-card text-foreground shadow-card hover:shadow-card-hover"
-              }`}
+            <Link
+              to={`/book?package=${pkg.popular ? "adventure" : i === 0 ? "photo-walk" : "vip"}`}
             >
-              Book Now
-            </motion.a>
+              <motion.span
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                transition={spring}
+                className={`inline-flex items-center justify-center w-full px-6 py-3 rounded-lg font-bold text-sm transition-shadow ${
+                  pkg.popular
+                    ? "bg-primary text-primary-foreground shadow-card hover:shadow-card-hover"
+                    : "bg-card text-foreground shadow-card hover:shadow-card-hover"
+                }`}
+              >
+                Book Now
+              </motion.span>
+            </Link>
           </motion.div>
         ))}
       </div>
