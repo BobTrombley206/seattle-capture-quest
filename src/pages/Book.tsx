@@ -69,10 +69,23 @@ const Book = () => {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const isFormValid = selectedPackage && date && time && name && email;
+  const isFormValid = Boolean(
+    selectedPackage && date && time && name.trim() && email.trim()
+  );
+
+  const missingFields = [
+    !selectedPackage && "package",
+    !date && "date",
+    !time && "time",
+    !name.trim() && "name",
+    !email.trim() && "email",
+  ].filter(Boolean) as string[];
 
   const handleSubmit = async () => {
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      toast.error(`Please complete: ${missingFields.join(", ")}`);
+      return;
+    }
     setLoading(true);
 
     try {
