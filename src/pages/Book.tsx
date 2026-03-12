@@ -290,7 +290,7 @@ const Book = () => {
             <Button
               size="lg"
               className="w-full text-base font-bold"
-              disabled={!isFormValid || loading}
+              disabled={loading}
               onClick={handleSubmit}
             >
               {loading ? (
