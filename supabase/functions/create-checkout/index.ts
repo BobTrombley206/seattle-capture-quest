@@ -54,8 +54,8 @@ serve(async (req) => {
       customer_email: customerId ? undefined : customerEmail,
       line_items: [{ price: pkg.priceId, quantity: 1 }],
       mode: "payment",
-      success_url: `${origin}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/booking-canceled`,
+      success_url: `${origin}/?booking=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/?booking=canceled`,
       metadata: {
         packageName: pkg.name,
         customerName,
