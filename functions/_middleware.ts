@@ -2,14 +2,15 @@
  * Cloudflare Pages Middleware — Dynamic Rendering for Bots
  *
  * Regular users  → SPA (client-side React)
- * Bots / crawlers → pre-rendered HTML via Prerender.io
+ * Bots / crawlers → semantic HTML via render-seo edge function
  */
 
 const BOT_AGENTS =
   /googlebot|google-extended|bingbot|yandex|baiduspider|twitterbot|facebookexternalhit|linkedinbot|slackbot|chatgpt-user|gptbot|claudebot|anthropic-ai|perplexitybot|applebot|duckduckbot|ia_archiver|rogerbot|embedly|showyoubot|outbrain|pinterestbot|quora link preview|redditbot|whatsapp|telegrambot|discordbot/i;
 
 interface Env {
-  PRERENDER_TOKEN: string;
+  SUPABASE_URL: string;
+  SUPABASE_ANON_KEY: string;
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -22,10 +23,20 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   if (BOT_AGENTS.test(ua) && isPageRequest) {
     try {
-      const prerenderUrl = `https://service.prerender.io/${context.request.url}`;
-      const response = await fetch(prerenderUrl, {
-        headers: { "X-Prerender-Token": context.env.PRERENDER_TOKEN || "" },
-      });
+      const supabaseUrl = context.env.SUPABASE_URL;
+      const anonKey = context.env.SUPABASE_ANON_KEY;
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/render-seo`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${anonKey}`,
+          },
+          body: JSON.stringify({ path: url.pathname }),
+        }
+      );
 
       if (response.ok) {
         return new Response(await response.text(), {
@@ -33,15 +44,15 @@ export const onRequest: PagesFunction<Env> = async (context) => {
           headers: {
             "Content-Type": "text/html; charset=utf-8",
             "X-Rendered-For": "bot",
-            "Cache-Control": "public, max-age=3600",
+            "Cache-Control": "public, max-age=3600, s-maxage=86400",
           },
         });
       }
     } catch {
-      // Fall through to SPA if prerender service fails
+      // Fall through to SPA if edge function fails
     }
   }
 
-  // Normal users (and bots without a prerendered page) get the SPA
+  // Normal users (and bots without a rendered page) get the SPA
   return context.next();
 };
