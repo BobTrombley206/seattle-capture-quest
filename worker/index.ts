@@ -1,7 +1,7 @@
 /**
  * Cloudflare Worker — Dynamic Rendering for Bots + Static Asset Serving
  *
- * Regular users  → SPA (static assets via Assets binding)
+ * Regular users  → SPA (static assets via Assets binding with SPA fallback)
  * Bots / crawlers → semantic HTML via render-seo edge function
  */
 
@@ -20,15 +20,16 @@ export default {
     const url = new URL(request.url);
     const cleanPath = url.pathname.replace(/\/+$/, "") || "/";
 
-    // Booking result pages should always render via SPA client routing
-    const isBookingResultPath =
-      cleanPath === "/booking-success" || cleanPath === "/booking-canceled";
-
     // Only intercept navigation requests (HTML pages), not assets
     const isPageRequest =
       !url.pathname.match(/\.\w{2,5}$/) || url.pathname.endsWith(".html");
 
-    if (!isBookingResultPath && BOT_AGENTS.test(ua) && isPageRequest) {
+    // Skip bot rendering for post-checkout pages (they need client-side JS)
+    const skipBotRender =
+      cleanPath === "/booking-success" || cleanPath === "/booking-canceled";
+
+    // Bot detection: serve pre-rendered HTML for SEO
+    if (!skipBotRender && BOT_AGENTS.test(ua) && isPageRequest) {
       try {
         const response = await fetch(
           `${env.SUPABASE_URL}/functions/v1/render-seo`,
@@ -58,27 +59,9 @@ export default {
       }
     }
 
-    // Serve SPA shell for app routes (direct visits like /book, /booking-success)
-    if (isPageRequest && (request.method === "GET" || request.method === "HEAD")) {
-      const indexUrl = new URL(request.url);
-      indexUrl.pathname = "/index.html";
-      const indexRequest = new Request(indexUrl.toString(), request);
-      const response = await env.ASSETS.fetch(indexRequest);
-
-      if (isBookingResultPath) {
-        const headers = new Headers(response.headers);
-        headers.set("Cache-Control", "no-store");
-        return new Response(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers,
-        });
-      }
-
-      return response;
-    }
-
-    // Serve static assets directly
+    // For all non-bot requests, pass directly to ASSETS binding.
+    // The wrangler.toml `not_found_handling = "single-page-application"`
+    // handles SPA routing automatically (serves index.html for unknown paths).
     return env.ASSETS.fetch(request);
   },
 };
