@@ -11,13 +11,13 @@ const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 const BookingCanceled = () => (
   <>
     <PageSEO
-      title="Booking Canceled"
+      title="Booking Canceled | PNW Portraits"
       description="Your booking was canceled and you have not been charged. Feel free to try again whenever you're ready."
       noindex
     />
     <Navbar />
-    <main className="min-h-screen flex items-center justify-center pt-20 pb-16">
-      <div className="container max-w-lg text-center">
+    <main className="min-h-screen flex items-center justify-center pt-20 pb-16 px-4">
+      <div className="w-full max-w-lg text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -30,7 +30,7 @@ const BookingCanceled = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.1 }}
-          className="text-3xl mb-3"
+          className="text-3xl sm:text-4xl font-bold mb-3"
         >
           Booking Canceled
         </motion.h1>
@@ -40,20 +40,20 @@ const BookingCanceled = () => (
           transition={{ ...spring, delay: 0.15 }}
           className="text-muted-foreground mb-8"
         >
-          No worries — your session wasn't booked and you haven't been charged.
-          Feel free to try again whenever you're ready.
+          It looks like the checkout process was canceled. You can return
+          anytime to schedule your Seattle Photo Walk.
         </motion.p>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ ...spring, delay: 0.2 }}
-          className="flex gap-3 justify-center"
+          className="flex flex-col sm:flex-row gap-3 justify-center"
         >
           <Button asChild>
-            <Link to="/book">Try Again</Link>
+            <Link to="/book">Try Booking Again</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link to="/">Back to Home</Link>
+            <a href="https://pnwportraits.com">Return to Home</a>
           </Button>
         </motion.div>
       </div>
