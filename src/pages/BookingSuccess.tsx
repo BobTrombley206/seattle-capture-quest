@@ -26,13 +26,10 @@ const BookingSuccess = () => {
 
   useEffect(() => {
     if (!sessionId) return;
-    supabase
-      .from("bookings")
-      .select("customer_name, package_name, amount_cents, session_date, session_time")
-      .eq("stripe_session_id", sessionId)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) setBooking(data);
+    supabase.functions
+      .invoke("get-booking", { body: { sessionId } })
+      .then(({ data, error }) => {
+        if (!error && data?.booking) setBooking(data.booking);
       });
   }, [sessionId]);
 
