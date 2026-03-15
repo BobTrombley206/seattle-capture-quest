@@ -11,6 +11,16 @@ import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
+const RootRoute = () => {
+  const [searchParams] = useSearchParams();
+  const bookingStatus = searchParams.get("booking");
+
+  if (bookingStatus === "success") return <BookingSuccess />;
+  if (bookingStatus === "canceled") return <BookingCanceled />;
+
+  return <Index />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
