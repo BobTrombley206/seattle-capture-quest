@@ -1,0 +1,17 @@
+name = "pnw-portraits"
+main = "worker/index.ts"
+compatibility_date = "2024-09-23"
+
+[assets]
+directory = "dist"
+binding = "ASSETS"
+
+# SPA fallback — serve index.html for unmatched routes
+[assets.serving]
+not_found_handling = "single-page-application"
+
+[vars]
+SUPABASE_URL = "https://xxqcbwyftledvxqmrhfc.supabase.co"
+
+# Add SUPABASE_ANON_KEY as a secret:
+# npx wrangler secret put SUPABASE_ANON_KEY
