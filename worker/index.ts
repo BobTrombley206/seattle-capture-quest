@@ -52,7 +52,15 @@ export default {
       }
     }
 
-    // Serve static assets (SPA) via Assets binding
+    // Serve SPA shell for app routes (direct visits like /book, /booking-success)
+    if (isPageRequest && (request.method === "GET" || request.method === "HEAD")) {
+      const indexUrl = new URL(request.url);
+      indexUrl.pathname = "/index.html";
+      const indexRequest = new Request(indexUrl.toString(), request);
+      return env.ASSETS.fetch(indexRequest);
+    }
+
+    // Serve static assets directly
     return env.ASSETS.fetch(request);
   },
 };
