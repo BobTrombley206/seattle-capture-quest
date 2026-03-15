@@ -1,6 +1,10 @@
 name = "pnw-portraits"
 main = "worker/index.ts"
 compatibility_date = "2024-09-23"
+routes = [
+  { pattern = "pnwportraits.com/*", zone_name = "pnwportraits.com" },
+  { pattern = "www.pnwportraits.com/*", zone_name = "pnwportraits.com" },
+]
 
 [assets]
 directory = "dist"
