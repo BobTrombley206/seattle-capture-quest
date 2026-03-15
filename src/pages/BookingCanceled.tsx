@@ -4,11 +4,17 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PageSEO from "@/components/seo/PageSEO";
 
 const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
 const BookingCanceled = () => (
   <>
+    <PageSEO
+      title="Booking Canceled"
+      description="Your booking was canceled and you have not been charged. Feel free to try again whenever you're ready."
+      noindex
+    />
     <Navbar />
     <main className="min-h-screen flex items-center justify-center pt-20 pb-16">
       <div className="container max-w-lg text-center">

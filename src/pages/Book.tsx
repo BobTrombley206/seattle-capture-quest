@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useSearchParams, Link } from "react-router-dom";
+import PageSEO from "@/components/seo/PageSEO";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 
 const packages = [
   {
@@ -116,9 +118,21 @@ const Book = () => {
 
   return (
     <>
+      <PageSEO
+        title="Book Your Seattle Photo Session"
+        description="Reserve your guided photo walk in Seattle. Choose from 3 packages starting at $150. Pike Place Market, waterfront, and skyline locations."
+        canonicalUrl="https://pnwportraits.com/book"
+        keywords={["book Seattle photographer", "Seattle photo session booking", "Pike Place Market photo walk"]}
+      />
       <Navbar />
       <main className="min-h-screen pt-24 pb-16">
         <div className="container max-w-2xl">
+          <Breadcrumbs
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Book", path: "/book" },
+            ]}
+          />
           <Link
             to="/"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-8"
