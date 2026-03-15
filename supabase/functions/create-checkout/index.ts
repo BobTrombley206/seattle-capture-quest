@@ -83,6 +83,56 @@ serve(async (req) => {
       notes: notes || null,
     });
 
+    // --- Owner notifications (fire-and-forget) ---
+
+    // 1. Email notification via transactional queue
+    const emailHtml = `
+      <h2>New Booking Received!</h2>
+      <p><strong>Customer:</strong> ${customerName} (${customerEmail})</p>
+      <p><strong>Package:</strong> ${pkg.name}</p>
+      <p><strong>Date:</strong> ${sessionDate}</p>
+      <p><strong>Time:</strong> ${sessionTime}</p>
+      ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
+      <p><strong>Amount:</strong> $${(pkg.amount / 100).toFixed(2)}</p>
+      <hr>
+      <p style="color:#888;font-size:12px;">This is an automated notification from PNW Portraits.</p>
+    `;
+
+    supabaseAdmin.rpc("enqueue_email", {
+      queue_name: "transactional_emails",
+      payload: {
+        to: "cloudyandcoolprod@gmail.com",
+        from: "PNW Portraits <notify@notify.www.pnwportraits.com>",
+        sender_domain: "notify.www.pnwportraits.com",
+        subject: `New Booking: ${pkg.name} — ${customerName}`,
+        html: emailHtml,
+        text: `New booking from ${customerName} (${customerEmail}). Package: ${pkg.name}. Date: ${sessionDate} at ${sessionTime}.${notes ? ` Notes: ${notes}` : ""}`,
+        purpose: "transactional",
+        label: "booking_notification",
+        message_id: `booking-notify-${session.id}`,
+        queued_at: new Date().toISOString(),
+      },
+    }).then(({ error }) => {
+      if (error) console.error("Failed to enqueue booking notification email:", error);
+    });
+
+    // 2. SMS notification via Twilio
+    const smsUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-booking-sms`;
+    fetch(smsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({
+        customerName,
+        packageName: pkg.name,
+        sessionDate,
+        sessionTime,
+        notes: notes || "",
+      }),
+    }).catch((err) => console.error("Failed to send booking SMS:", err));
+
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
