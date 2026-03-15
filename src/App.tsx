@@ -7,9 +7,13 @@ import Index from "./pages/Index.tsx";
 import Book from "./pages/Book.tsx";
 import BookingSuccess from "./pages/BookingSuccess.tsx";
 import BookingCanceled from "./pages/BookingCanceled.tsx";
+import ComingSoon from "./pages/ComingSoon.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
+
+// ✅ FLIP THIS TO false WHEN YOU'RE READY TO GO LIVE
+const COMING_SOON = true;
 
 const RootRoute = () => {
   const [searchParams] = useSearchParams();
@@ -18,6 +22,7 @@ const RootRoute = () => {
   if (bookingStatus === "success") return <BookingSuccess />;
   if (bookingStatus === "canceled") return <BookingCanceled />;
 
+  if (COMING_SOON) return <ComingSoon />;
   return <Index />;
 };
 
@@ -29,11 +34,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RootRoute />} />
-          <Route path="/book" element={<Book />} />
+          {!COMING_SOON && <Route path="/book" element={<Book />} />}
           <Route path="/booking-success" element={<BookingSuccess />} />
           <Route path="/booking-canceled" element={<BookingCanceled />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={COMING_SOON ? <ComingSoon /> : <NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
