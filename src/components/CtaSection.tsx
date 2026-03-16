@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { trackBookNowClick } from "@/lib/analytics";
 
 const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
@@ -24,7 +25,7 @@ const CtaSection = () => (
       >
         Professional portraits at Seattle's most iconic locations.
       </motion.p>
-      <Link to="/book">
+      <Link to="/book" onClick={() => trackBookNowClick()}>
         <motion.span
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

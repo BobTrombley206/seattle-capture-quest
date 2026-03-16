@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { trackBookNowClick, trackPackageInquiry } from "@/lib/analytics";
 
 const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
@@ -93,6 +94,10 @@ const PackagesSection = () => (
             </ul>
             <Link
               to={`/book?package=${pkg.popular ? "adventure" : i === 0 ? "photo-walk" : "vip"}`}
+              onClick={() => {
+                trackBookNowClick(pkg.name);
+                trackPackageInquiry(pkg.name);
+              }}
             >
               <motion.span
                 whileHover={{ scale: 1.03 }}
