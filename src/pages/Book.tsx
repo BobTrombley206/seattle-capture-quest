@@ -108,6 +108,8 @@ const Book = () => {
 
       if (error) throw error;
       if (data?.url) {
+        trackContactFormSubmit();
+        trackPackageInquiry(selectedPackage);
         window.location.href = data.url;
       }
     } catch (err: any) {

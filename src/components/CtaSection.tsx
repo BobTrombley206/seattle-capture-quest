@@ -25,7 +25,7 @@ const CtaSection = () => (
       >
         Professional portraits at Seattle's most iconic locations.
       </motion.p>
-      <Link to="/book">
+      <Link to="/book" onClick={() => trackBookNowClick()}>
         <motion.span
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

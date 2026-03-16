@@ -94,6 +94,10 @@ const PackagesSection = () => (
             </ul>
             <Link
               to={`/book?package=${pkg.popular ? "adventure" : i === 0 ? "photo-walk" : "vip"}`}
+              onClick={() => {
+                trackBookNowClick(pkg.name);
+                trackPackageInquiry(pkg.name);
+              }}
             >
               <motion.span
                 whileHover={{ scale: 1.03 }}
