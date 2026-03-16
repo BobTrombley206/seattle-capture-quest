@@ -55,6 +55,7 @@ const HeroSection = () => {
           >
             <motion.a
               href="#packages"
+              onClick={() => trackBookNowClick()}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={spring}
