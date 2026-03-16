@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Camera, Clock, MapPin } from "lucide-react";
+import { trackBookNowClick } from "@/lib/analytics";
 import heroPikePlace from "@/assets/hero-pike-place.jpg";
 import heroWaterfront from "@/assets/hero-waterfront.jpg";
 import heroCouple from "@/assets/hero-couple.jpg";
