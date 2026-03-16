@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { trackBookNowClick, trackPackageInquiry } from "@/lib/analytics";
 
 const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
