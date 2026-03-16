@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { trackBookNowClick } from "@/lib/analytics";
 
 const spring = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
