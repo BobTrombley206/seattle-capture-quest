@@ -13,7 +13,7 @@ import NotFound from "./pages/NotFound.tsx";
 const queryClient = new QueryClient();
 
 // ✅ FLIP THIS TO false WHEN YOU'RE READY TO GO LIVE
-const COMING_SOON = true;
+const COMING_SOON = false;
 
 const RootRoute = () => {
   const [searchParams] = useSearchParams();
